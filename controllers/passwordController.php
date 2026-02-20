@@ -61,4 +61,28 @@ class PasswordController {
             ]);
         }
     }
+
+
+    // Maneja el POST validate
+    public function handleValidate() {
+        $jsonBody = file_get_contents('php://input');
+        $data = json_decode($jsonBody, true) ?? [];
+
+        // Validamos que nos manden los datos correctos
+        if (!isset($data['password']) || !isset($data['requirements'])) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false, 
+                "error" => "Faltan parámetros: asegúrate de enviar 'password' y 'requirements' en el JSON."
+            ]);
+            return;
+        }
+
+        $result = $this->adapter->validatePassword($data['password'], $data['requirements']);
+        http_response_code(200);
+        echo json_encode([
+            "success" => true,
+            "data" => $result
+        ]);
+    }
 }

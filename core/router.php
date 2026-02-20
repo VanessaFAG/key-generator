@@ -17,9 +17,9 @@ class Router {
         } elseif ($uri === '/api/passwords' && $method === 'POST') {
             $controller->handleGenerateMultiple();
             
-        } elseif ($uri === '/api/password/validate' && $method === 'POST') {
-            http_response_code(501); // 501 Not Implemented
-            echo json_encode(["message" => "Endpoint de validación en construcción"]);
+        }elseif ($uri === '/api/password/validate' && $method === 'POST') {
+            // Validación ya terminada 
+            $controller->handleValidate();
             
         } else {
             http_response_code(404);

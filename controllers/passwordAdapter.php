@@ -39,4 +39,36 @@ class PasswordAdapter {
             'require_each' => true
         ];
     }
+    // Valida una contraseña existente (Caso 3)
+    public function validatePassword(string $password, array $requirements): array {
+
+        $errors = [];
+        
+        // Verificamos la longitud mínima
+        $minLength = $requirements['minLength'] ?? 8;
+        if (strlen($password) < $minLength) {
+            $errors[] = "La contraseña debe tener al menos {$minLength} caracteres.";
+        }
+        
+        // Verificamos si requiere mayúsculas usando expresiones regulares
+        if (!empty($requirements['requireUppercase']) && !preg_match('/[A-Z]/', $password)) {
+            $errors[] = "Debe contener al menos una letra mayúscula.";
+        }
+        
+        // Verificamos si requiere números
+        if (!empty($requirements['requireNumbers']) && !preg_match('/[0-9]/', $password)) {
+            $errors[] = "Debe contener al menos un número.";
+        }
+        
+        // Verificamos si requiere símbolos (cualquier cosa que no sea letra o número)
+        if (!empty($requirements['requireSymbols']) && !preg_match('/[^a-zA-Z0-9]/', $password)) {
+            $errors[] = "Debe contener al menos un símbolo especial.";
+        }
+
+        // Retornamos si es válida y la lista de errores (si los hay)
+        return [
+            'isValid' => count($errors) === 0,
+            'errors' => $errors
+        ];
+    }
 }
